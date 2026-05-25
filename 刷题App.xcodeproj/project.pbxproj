@@ -1,0 +1,438 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		100000000000000000000001 /* 刷题App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000001 /* 刷题App.swift */; };
+		100000000000000000000002 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000002 /* RootView.swift */; };
+		100000000000000000000003 /* StudyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000003 /* StudyModels.swift */; };
+		100000000000000000000004 /* GeneratedQuestionDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000004 /* GeneratedQuestionDTO.swift */; };
+		100000000000000000000005 /* AnswerEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000005 /* AnswerEvaluator.swift */; };
+		100000000000000000000006 /* ScoringService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000006 /* ScoringService.swift */; };
+		100000000000000000000007 /* MarkdownParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000007 /* MarkdownParser.swift */; };
+		100000000000000000000008 /* DocumentImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000008 /* DocumentImportService.swift */; };
+		100000000000000000000009 /* DocxTextExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000009 /* DocxTextExtractor.swift */; };
+		100000000000000000000010 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* KeychainStore.swift */; };
+		100000000000000000000011 /* DeepSeekClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* DeepSeekClient.swift */; };
+		100000000000000000000012 /* LocalQuestionGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* LocalQuestionGenerator.swift */; };
+		100000000000000000000013 /* QuestionGenerationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000013 /* QuestionGenerationService.swift */; };
+		100000000000000000000014 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* AppState.swift */; };
+		100000000000000000000023 /* QuestionVariantFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000023 /* QuestionVariantFactory.swift */; };
+		100000000000000000000024 /* BuiltInDeepSeekConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000024 /* BuiltInDeepSeekConfig.swift */; };
+		100000000000000000000025 /* PracticeDraftStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000025 /* PracticeDraftStore.swift */; };
+		100000000000000000000028 /* MistakeProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000028 /* MistakeProgressStore.swift */; };
+		100000000000000000000015 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* LibraryView.swift */; };
+		100000000000000000000016 /* BankDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000016 /* BankDetailView.swift */; };
+		100000000000000000000017 /* PracticeHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000017 /* PracticeHomeView.swift */; };
+		100000000000000000000018 /* MistakesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000018 /* MistakesView.swift */; };
+		100000000000000000000019 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000019 /* StatsView.swift */; };
+		100000000000000000000020 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000020 /* SettingsView.swift */; };
+		100000000000000000000021 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000021 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		200000000000000000000001 /* 刷题App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "刷题App.swift"; sourceTree = "<group>"; };
+		200000000000000000000002 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/RootView.swift; sourceTree = "<group>"; };
+		200000000000000000000003 /* StudyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/StudyModels.swift; sourceTree = "<group>"; };
+		200000000000000000000004 /* GeneratedQuestionDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Models/GeneratedQuestionDTO.swift; sourceTree = "<group>"; };
+		200000000000000000000005 /* AnswerEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/AnswerEvaluator.swift; sourceTree = "<group>"; };
+		200000000000000000000006 /* ScoringService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/ScoringService.swift; sourceTree = "<group>"; };
+		200000000000000000000007 /* MarkdownParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/MarkdownParser.swift; sourceTree = "<group>"; };
+		200000000000000000000008 /* DocumentImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/DocumentImportService.swift; sourceTree = "<group>"; };
+		200000000000000000000009 /* DocxTextExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/DocxTextExtractor.swift; sourceTree = "<group>"; };
+		200000000000000000000010 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Utilities/KeychainStore.swift; sourceTree = "<group>"; };
+		200000000000000000000011 /* DeepSeekClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/DeepSeekClient.swift; sourceTree = "<group>"; };
+		200000000000000000000012 /* LocalQuestionGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/LocalQuestionGenerator.swift; sourceTree = "<group>"; };
+		200000000000000000000013 /* QuestionGenerationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/QuestionGenerationService.swift; sourceTree = "<group>"; };
+		200000000000000000000014 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/AppState.swift; sourceTree = "<group>"; };
+		200000000000000000000023 /* QuestionVariantFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/QuestionVariantFactory.swift; sourceTree = "<group>"; };
+		200000000000000000000024 /* BuiltInDeepSeekConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/BuiltInDeepSeekConfig.swift; sourceTree = "<group>"; };
+		200000000000000000000025 /* PracticeDraftStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/PracticeDraftStore.swift; sourceTree = "<group>"; };
+		200000000000000000000028 /* MistakeProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Core/Services/MistakeProgressStore.swift; sourceTree = "<group>"; };
+		200000000000000000000015 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Library/LibraryView.swift; sourceTree = "<group>"; };
+		200000000000000000000016 /* BankDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Library/BankDetailView.swift; sourceTree = "<group>"; };
+		200000000000000000000017 /* PracticeHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Practice/PracticeHomeView.swift; sourceTree = "<group>"; };
+		200000000000000000000018 /* MistakesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Mistakes/MistakesView.swift; sourceTree = "<group>"; };
+		200000000000000000000019 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Stats/StatsView.swift; sourceTree = "<group>"; };
+		200000000000000000000020 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features/Settings/SettingsView.swift; sourceTree = "<group>"; };
+		200000000000000000000021 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
+		200000000000000000000022 /* 刷题App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "刷题App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		200000000000000000000026 /* AppConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/AppConfig.xcconfig; sourceTree = "<group>"; };
+		200000000000000000000027 /* APISecrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/APISecrets.example.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		300000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		400000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				400000000000000000000002 /* 刷题App */,
+				400000000000000000000004 /* Config */,
+				400000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		400000000000000000000002 /* 刷题App */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000001 /* 刷题App.swift */,
+				200000000000000000000002 /* RootView.swift */,
+				200000000000000000000003 /* StudyModels.swift */,
+				200000000000000000000004 /* GeneratedQuestionDTO.swift */,
+				200000000000000000000005 /* AnswerEvaluator.swift */,
+				200000000000000000000006 /* ScoringService.swift */,
+				200000000000000000000007 /* MarkdownParser.swift */,
+				200000000000000000000008 /* DocumentImportService.swift */,
+				200000000000000000000009 /* DocxTextExtractor.swift */,
+				200000000000000000000010 /* KeychainStore.swift */,
+				200000000000000000000011 /* DeepSeekClient.swift */,
+				200000000000000000000012 /* LocalQuestionGenerator.swift */,
+				200000000000000000000013 /* QuestionGenerationService.swift */,
+				200000000000000000000014 /* AppState.swift */,
+				200000000000000000000023 /* QuestionVariantFactory.swift */,
+				200000000000000000000024 /* BuiltInDeepSeekConfig.swift */,
+				200000000000000000000025 /* PracticeDraftStore.swift */,
+				200000000000000000000028 /* MistakeProgressStore.swift */,
+				200000000000000000000015 /* LibraryView.swift */,
+				200000000000000000000016 /* BankDetailView.swift */,
+				200000000000000000000017 /* PracticeHomeView.swift */,
+				200000000000000000000018 /* MistakesView.swift */,
+				200000000000000000000019 /* StatsView.swift */,
+				200000000000000000000020 /* SettingsView.swift */,
+				200000000000000000000021 /* Assets.xcassets */,
+			);
+			path = "刷题App";
+			sourceTree = "<group>";
+		};
+		400000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000022 /* 刷题App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		400000000000000000000004 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000026 /* AppConfig.xcconfig */,
+				200000000000000000000027 /* APISecrets.example.xcconfig */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		500000000000000000000001 /* 刷题App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 900000000000000000000002 /* Build configuration list for PBXNativeTarget "刷题App" */;
+			buildPhases = (
+				600000000000000000000001 /* Sources */,
+				300000000000000000000001 /* Frameworks */,
+				600000000000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "刷题App";
+			productName = "刷题App";
+			productReference = 200000000000000000000022 /* 刷题App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		700000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					500000000000000000000001 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = 900000000000000000000001 /* Build configuration list for PBXProject "刷题App" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				zh-Hans,
+			);
+			mainGroup = 400000000000000000000001;
+			productRefGroup = 400000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				500000000000000000000001 /* 刷题App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		600000000000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000021 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		600000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000001 /* 刷题App.swift in Sources */,
+				100000000000000000000002 /* RootView.swift in Sources */,
+				100000000000000000000003 /* StudyModels.swift in Sources */,
+				100000000000000000000004 /* GeneratedQuestionDTO.swift in Sources */,
+				100000000000000000000005 /* AnswerEvaluator.swift in Sources */,
+				100000000000000000000006 /* ScoringService.swift in Sources */,
+				100000000000000000000007 /* MarkdownParser.swift in Sources */,
+				100000000000000000000008 /* DocumentImportService.swift in Sources */,
+				100000000000000000000009 /* DocxTextExtractor.swift in Sources */,
+				100000000000000000000010 /* KeychainStore.swift in Sources */,
+				100000000000000000000011 /* DeepSeekClient.swift in Sources */,
+				100000000000000000000012 /* LocalQuestionGenerator.swift in Sources */,
+				100000000000000000000013 /* QuestionGenerationService.swift in Sources */,
+				100000000000000000000014 /* AppState.swift in Sources */,
+				100000000000000000000023 /* QuestionVariantFactory.swift in Sources */,
+				100000000000000000000024 /* BuiltInDeepSeekConfig.swift in Sources */,
+				100000000000000000000025 /* PracticeDraftStore.swift in Sources */,
+				100000000000000000000028 /* MistakeProgressStore.swift in Sources */,
+				100000000000000000000015 /* LibraryView.swift in Sources */,
+				100000000000000000000016 /* BankDetailView.swift in Sources */,
+				100000000000000000000017 /* PracticeHomeView.swift in Sources */,
+				100000000000000000000018 /* MistakesView.swift in Sources */,
+				100000000000000000000019 /* StatsView.swift in Sources */,
+				100000000000000000000020 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		800000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		800000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		800000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 200000000000000000000026 /* AppConfig.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "刷题App";
+				INFOPLIST_KEY_DEEPSEEK_API_KEY = "$(DEEPSEEK_API_KEY)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.local.practicebuilder";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		800000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 200000000000000000000026 /* AppConfig.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "刷题App";
+				INFOPLIST_KEY_DEEPSEEK_API_KEY = "$(DEEPSEEK_API_KEY)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.local.practicebuilder";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		900000000000000000000001 /* Build configuration list for PBXProject "刷题App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				800000000000000000000001 /* Debug */,
+				800000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		900000000000000000000002 /* Build configuration list for PBXNativeTarget "刷题App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				800000000000000000000003 /* Debug */,
+				800000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 700000000000000000000001 /* Project object */;
+}
