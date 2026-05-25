@@ -12,13 +12,16 @@ struct BankDetailView: View {
     var body: some View {
         List {
             Section {
-                VStack(alignment: .leading, spacing: 12) {
-                    Text(bank.sourceFileName)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    Text(bank.sourcePreview)
-                        .font(.body)
-                        .lineLimit(8)
+                HStack(alignment: .top, spacing: 12) {
+                    DetailIcon(systemImage: "doc.text.magnifyingglass", color: .blue)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Label(bank.sourceFileName, systemImage: "paperclip")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text(bank.sourcePreview)
+                            .font(.body)
+                            .lineLimit(8)
+                    }
                 }
                 .padding(.vertical, 4)
             } header: {
@@ -27,15 +30,20 @@ struct BankDetailView: View {
 
             Section {
                 ForEach(bank.questions) { question in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(question.sourceText)
-                            .font(.body)
-                        HStack {
-                            Text("练习时生成题型")
-                            Text(question.knowledgeTags.joined(separator: " / "))
-                        }
+                    HStack(alignment: .top, spacing: 12) {
+                        DetailIcon(systemImage: "text.badge.checkmark", color: .green)
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(question.sourceText)
+                                .font(.body)
+                            HStack(spacing: 12) {
+                                Label("练习时生成题型", systemImage: "wand.and.stars")
+                                if !question.knowledgeTags.isEmpty {
+                                    Label(question.knowledgeTags.joined(separator: " / "), systemImage: "tag")
+                                }
+                            }
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                        }
                     }
                     .padding(.vertical, 4)
                 }
@@ -74,5 +82,18 @@ struct BankDetailView: View {
         } message: {
             Text("题库、题目和未完成练习进度都会被删除。")
         }
+    }
+}
+
+private struct DetailIcon: View {
+    let systemImage: String
+    let color: Color
+
+    var body: some View {
+        Image(systemName: systemImage)
+            .font(.headline)
+            .foregroundStyle(color)
+            .frame(width: 34, height: 34)
+            .background(color.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
     }
 }

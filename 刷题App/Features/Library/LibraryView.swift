@@ -236,16 +236,28 @@ private struct BankRow: View {
     let bank: QuestionBank
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(bank.title)
-                .font(.headline)
-                .lineLimit(1)
-            HStack {
-                Label("\(bank.questions.count) 条材料", systemImage: "text.page")
-                Text(bank.createdAt, style: .date)
+        HStack(spacing: 12) {
+            Image(systemName: "books.vertical.fill")
+                .font(.title3)
+                .foregroundStyle(.blue)
+                .frame(width: 40, height: 40)
+                .background(Color.blue.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(bank.title)
+                    .font(.headline)
+                    .lineLimit(1)
+                HStack(spacing: 12) {
+                    Label("\(bank.questions.count) 条材料", systemImage: "text.page")
+                    Label {
+                        Text(bank.createdAt, style: .date)
+                    } icon: {
+                        Image(systemName: "calendar")
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
         }
         .padding(.vertical, 4)
     }

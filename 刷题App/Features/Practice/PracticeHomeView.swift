@@ -31,18 +31,25 @@ struct PracticeHomeView: View {
                         Button {
                             start(bank)
                         } label: {
-                            HStack {
+                            HStack(spacing: 12) {
+                                Image(systemName: "play.circle.fill")
+                                    .font(.title2)
+                                    .foregroundStyle(.green)
+                                    .frame(width: 42, height: 42)
+                                    .background(Color.green.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+
                                 VStack(alignment: .leading, spacing: 6) {
                                     Text(bank.title)
                                         .font(.headline)
                                         .foregroundStyle(.primary)
-                                    Text("\(bank.questions.count) 条材料")
+                                    Label("\(bank.questions.count) 条材料", systemImage: "text.page")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
-                                Image(systemName: "play.circle.fill")
-                                    .font(.title2)
+                                Image(systemName: "chevron.right")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.tertiary)
                             }
                         }
 
@@ -173,20 +180,20 @@ struct PracticeSessionView: View {
             ProgressView(value: Double(currentIndex + 1), total: Double(sessionQuestions.count))
 
             HStack {
-                Text("第 \(currentIndex + 1) / \(sessionQuestions.count) 题")
+                Label("第 \(currentIndex + 1) / \(sessionQuestions.count) 题", systemImage: "list.number")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Text(question.kind.title)
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.thinMaterial, in: Capsule())
-                Text((QuestionDifficulty(rawValue: question.difficulty) ?? .medium).title)
-                    .font(.caption)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(.thinMaterial, in: Capsule())
+                QuestionBadge(
+                    title: question.kind.title,
+                    systemImage: icon(for: question.kind),
+                    color: color(for: question.kind)
+                )
+                QuestionBadge(
+                    title: (QuestionDifficulty(rawValue: question.difficulty) ?? .medium).title,
+                    systemImage: "gauge.with.dots.needle.50percent",
+                    color: .orange
+                )
             }
 
             Text(question.stem)
@@ -205,7 +212,7 @@ struct PracticeSessionView: View {
             .disabled(!canSubmit)
 
             if !question.knowledgeTags.isEmpty {
-                Text(question.knowledgeTags.joined(separator: " / "))
+                Label(question.knowledgeTags.joined(separator: " / "), systemImage: "tag")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -247,13 +254,12 @@ struct PracticeSessionView: View {
             answers = [option]
         } label: {
             HStack {
+                Image(systemName: answers.first == option ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(answers.first == option ? Color.accentColor : Color.secondary)
                 Text(option)
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
                 Spacer()
-                if answers.first == option {
-                    Image(systemName: "checkmark.circle.fill")
-                }
             }
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
             .padding(.horizontal, 12)
@@ -263,6 +269,22 @@ struct PracticeSessionView: View {
             )
         }
         .buttonStyle(.plain)
+    }
+
+    private func icon(for kind: PracticeQuestionKind) -> String {
+        switch kind {
+        case .fillBlank: "rectangle.and.pencil.and.ellipsis"
+        case .singleChoice: "checklist"
+        case .trueFalse: "checkmark.seal"
+        }
+    }
+
+    private func color(for kind: PracticeQuestionKind) -> Color {
+        switch kind {
+        case .fillBlank: .blue
+        case .singleChoice: .purple
+        case .trueFalse: .green
+        }
     }
 
     private var canSubmit: Bool {
@@ -405,6 +427,21 @@ struct PracticeSessionView: View {
     private func regenerate() {
         variantRound += 1
         buildQuestions(mode: .newBlanks(seed: variantRound))
+    }
+}
+
+private struct QuestionBadge: View {
+    let title: String
+    let systemImage: String
+    let color: Color
+
+    var body: some View {
+        Label(title, systemImage: systemImage)
+            .font(.caption)
+            .foregroundStyle(color)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(color.opacity(0.12), in: Capsule())
     }
 }
 

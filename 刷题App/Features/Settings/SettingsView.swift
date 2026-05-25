@@ -25,7 +25,11 @@ struct SettingsView: View {
                     } label: {
                         Label("保存设置", systemImage: "key")
                     }
-                    LabeledContent("内置 API", value: appState.hasBuiltInAPIKey ? "已启用" : "未配置")
+                    LabeledContent {
+                        Text(appState.hasBuiltInAPIKey ? "已启用" : "未配置")
+                    } label: {
+                        Label("内置 API", systemImage: "key.radiowaves.forward")
+                    }
                 } header: {
                     Text("DeepSeek")
                 } footer: {
@@ -33,22 +37,42 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    LabeledContent("默认模型", value: "deepseek-v4-flash")
-                    LabeledContent("接口地址", value: "api.deepseek.com")
+                    LabeledContent {
+                        Text("deepseek-v4-flash")
+                    } label: {
+                        Label("默认模型", systemImage: "cpu")
+                    }
+                    LabeledContent {
+                        Text("api.deepseek.com")
+                    } label: {
+                        Label("接口地址", systemImage: "network")
+                    }
                 } header: {
                     Text("模型")
                 }
 
                 Section {
-                    LabeledContent("目标平台", value: "iOS 17+")
-                    LabeledContent("本地存储", value: "SwiftData")
+                    LabeledContent {
+                        Text("iOS 17+")
+                    } label: {
+                        Label("目标平台", systemImage: "iphone")
+                    }
+                    LabeledContent {
+                        Text("SwiftData")
+                    } label: {
+                        Label("本地存储", systemImage: "internaldrive")
+                    }
                 } header: {
                     Text("关于")
                 }
 
                 Section {
                     Stepper(value: $appState.mistakeAutoDeleteThreshold, in: 1...10) {
-                        LabeledContent("连对自动删除", value: "\(appState.mistakeAutoDeleteThreshold) 次")
+                        LabeledContent {
+                            Text("\(appState.mistakeAutoDeleteThreshold) 次")
+                        } label: {
+                            Label("连对自动删除", systemImage: "checkmark.seal")
+                        }
                     }
                 } header: {
                     Text("错题")
