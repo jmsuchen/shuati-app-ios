@@ -22,7 +22,7 @@ struct PracticeHomeView: View {
                 ContentUnavailableView(
                     "暂无可练习题库",
                     systemImage: "pencil.slash",
-                    description: Text("先在题库页导入文件并生成题目。")
+                    description: Text("先在题库页导入文件并识别材料。")
                 )
                 .navigationTitle("练习")
             } else {
@@ -36,7 +36,7 @@ struct PracticeHomeView: View {
                                     Text(bank.title)
                                         .font(.headline)
                                         .foregroundStyle(.primary)
-                                    Text("\(bank.questions.count) 道题")
+                                    Text("\(bank.questions.count) 条材料")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -137,7 +137,7 @@ struct PracticeSessionView: View {
                     appState.activePracticeBank = nil
                 }
             } else if sessionQuestions.isEmpty {
-                ContentUnavailableView("题库没有题目", systemImage: "questionmark.folder")
+                ContentUnavailableView("题库没有可练习内容", systemImage: "questionmark.folder")
             } else {
                 questionView
             }
@@ -338,7 +338,7 @@ struct PracticeSessionView: View {
     }
 
     private var effectiveQuestionCount: Int {
-        let availableCount = bank.questions.filter { requestedKindFilter.includes($0.questionKind) }.count
+        let availableCount = bank.questions.count
         return requestedQuestionCount == Int.max ? availableCount : min(requestedQuestionCount, availableCount)
     }
 
@@ -370,7 +370,7 @@ struct PracticeSessionView: View {
     private func restore(_ draft: PracticeDraft) {
         sessionQuestions = variantFactory.makeSessionQuestions(
             from: bank,
-            count: draft.questionCount == Int.max ? bank.questions.count : draft.questionCount,
+            count: draft.questionCount == Int.max ? bank.questions.count : min(draft.questionCount, bank.questions.count),
             kindFilter: draft.kindFilter,
             mode: .same
         )

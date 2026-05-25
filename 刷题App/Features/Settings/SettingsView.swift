@@ -29,7 +29,7 @@ struct SettingsView: View {
                 } header: {
                     Text("DeepSeek")
                 } footer: {
-                    Text("默认优先使用内置 API；也可以在这里填写自定义 Key 覆盖。没有可用 API 时会使用本地规则识别题目。")
+                    Text("默认优先使用内置 API；也可以在这里填写自定义 Key 覆盖。题库只保存材料，练习时再按所选题型出题。")
                 }
 
                 Section {

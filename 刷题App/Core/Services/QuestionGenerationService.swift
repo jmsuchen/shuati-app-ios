@@ -5,7 +5,7 @@ struct QuestionGenerationService {
     var preferRemote: Bool
 
     func generateAllRecognizableQuestions(from document: ParsedDocument) async throws -> [GeneratedQuestionDTO] {
-        try await generateQuestions(from: document, count: estimatedQuestionCount(for: document))
+        LocalQuestionGenerator().recognizeItems(from: document, count: estimatedQuestionCount(for: document))
     }
 
     func generateQuestions(from document: ParsedDocument, count: Int) async throws -> [GeneratedQuestionDTO] {

@@ -20,64 +20,112 @@ struct QuestionVariantFactory {
         kindFilter: PracticeQuestionKindFilter,
         mode: PracticeBuildMode
     ) -> [SessionQuestion] {
-        let filtered = bank.questions.filter { kindFilter.includes($0.questionKind) }
-        let source = Array(filtered.prefix(count))
+        let source = Array(bank.questions.prefix(count))
         let distractors = bank.questions.flatMap(\.answers)
         return source.enumerated().map { index, question in
-            switch mode {
-            case .same:
-                return makeSame(question)
-            case .newBlanks(let seed):
-                return makeVariant(question, index: index + seed, distractors: distractors)
-            }
+            let seed = mode.seed + index
+            let kind = practiceKind(for: kindFilter, index: seed)
+            return makeQuestion(question, kind: kind, index: seed, distractors: distractors)
         }
     }
 
-    private func makeSame(_ question: PracticeQuestion) -> SessionQuestion {
+    private func practiceKind(for filter: PracticeQuestionKindFilter, index: Int) -> PracticeQuestionKind {
+        switch filter {
+        case .mixed:
+            return PracticeQuestionKind.allCases[index % PracticeQuestionKind.allCases.count]
+        case .fillBlank:
+            return .fillBlank
+        case .singleChoice:
+            return .singleChoice
+        case .trueFalse:
+            return .trueFalse
+        }
+    }
+
+    private func makeQuestion(
+        _ question: PracticeQuestion,
+        kind requestedKind: PracticeQuestionKind,
+        index: Int,
+        distractors: [String]
+    ) -> SessionQuestion {
+        let candidates = blankCandidates(in: question.sourceText)
+        let fallbackAnswers = question.answers.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+        let answer = candidates.dropFirst(index % max(1, candidates.count)).first
+            ?? candidates.first
+            ?? fallbackAnswers.first
+            ?? question.sourceText
+
+        switch requestedKind {
+        case .fillBlank:
+            return makeFillBlank(question, answer: answer)
+        case .singleChoice:
+            let options = makeOptions(answer: answer, distractors: distractors + candidates)
+            return SessionQuestion(
+                sourceQuestion: question,
+                stem: replacementStem(sourceText: question.sourceText, answer: answer, blank: "哪一项"),
+                answers: [answer],
+                options: options,
+                kind: .singleChoice,
+                sourceText: question.sourceText,
+                explanation: "正确选项来自原文中的关键表达：\(answer)。",
+                difficulty: question.difficulty,
+                knowledgeTags: question.knowledgeTags
+            )
+        case .trueFalse:
+            return makeTrueFalse(question, answer: answer, index: index, distractors: distractors + candidates)
+        }
+    }
+
+    private func makeFillBlank(_ question: PracticeQuestion, answer: String) -> SessionQuestion {
         SessionQuestion(
             sourceQuestion: question,
-            stem: question.stem,
-            answers: question.answers,
-            options: question.options,
-            kind: question.questionKind,
+            stem: replacementStem(sourceText: question.sourceText, answer: answer, blank: "____"),
+            answers: [answer],
+            options: [],
+            kind: .fillBlank,
             sourceText: question.sourceText,
-            explanation: question.explanation,
+            explanation: "答案来自原文中的关键表达：\(answer)。",
             difficulty: question.difficulty,
             knowledgeTags: question.knowledgeTags
         )
     }
 
-    private func makeVariant(_ question: PracticeQuestion, index: Int, distractors: [String]) -> SessionQuestion {
-        guard question.questionKind == .fillBlank || question.questionKind == .singleChoice else {
-            return makeSame(question)
+    private func makeTrueFalse(
+        _ question: PracticeQuestion,
+        answer: String,
+        index: Int,
+        distractors: [String]
+    ) -> SessionQuestion {
+        let shouldBeFalse = !index.isMultiple(of: 2)
+        let replacement = distractors.first { normalize($0) != normalize(answer) && question.sourceText.contains(answer) }
+        let statement: String
+        let correctAnswer: String
+        if shouldBeFalse, let replacement {
+            statement = replacementStem(sourceText: question.sourceText, answer: answer, blank: replacement)
+            correctAnswer = "错误"
+        } else {
+            statement = question.sourceText
+            correctAnswer = "正确"
         }
-
-        let candidates = blankCandidates(in: question.sourceText)
-            .filter { candidate in
-                !question.answers.contains { normalize($0) == normalize(candidate) }
-            }
-        guard let answer = candidates.dropFirst(index % max(1, candidates.count)).first ?? candidates.first else {
-            return makeSame(question)
-        }
-
-        let kind = question.questionKind == .singleChoice ? PracticeQuestionKind.singleChoice : PracticeQuestionKind.fillBlank
-        let stem = question.sourceText.replacingOccurrences(
-            of: answer,
-            with: kind == .singleChoice ? "哪一项" : "____",
-            options: [],
-            range: question.sourceText.range(of: answer)
-        )
-        let options = kind == .singleChoice ? makeOptions(answer: answer, distractors: distractors + candidates) : []
         return SessionQuestion(
             sourceQuestion: question,
-            stem: stem,
-            answers: [answer],
-            options: options,
-            kind: options.count == 4 ? kind : .fillBlank,
+            stem: "判断：\(statement)",
+            answers: [correctAnswer],
+            options: ["正确", "错误"],
+            kind: .trueFalse,
             sourceText: question.sourceText,
-            explanation: "本次改挖空为：\(answer)。",
+            explanation: correctAnswer == "正确" ? "该判断与原文一致。" : "原文中的关键表达应为：\(answer)。",
             difficulty: question.difficulty,
             knowledgeTags: question.knowledgeTags
+        )
+    }
+
+    private func replacementStem(sourceText: String, answer: String, blank: String) -> String {
+        sourceText.replacingOccurrences(
+            of: answer,
+            with: blank,
+            options: [],
+            range: sourceText.range(of: answer)
         )
     }
 
@@ -98,7 +146,28 @@ struct QuestionVariantFactory {
                 break
             }
         }
-        return values.count == 4 ? values.shuffled() : []
+        for fallback in fallbackOptions(for: answer) where !values.contains(fallback) {
+            values.append(fallback)
+            if values.count == 4 {
+                break
+            }
+        }
+        return Array(values.prefix(4)).shuffled()
+    }
+
+    private func fallbackOptions(for answer: String) -> [String] {
+        if let number = Double(answer) {
+            return [
+                String(format: "%.0f", number + 1),
+                String(format: "%.0f", max(0, number - 1)),
+                "\(answer)0"
+            ]
+        }
+        return [
+            "\(answer)相关概念",
+            "\(answer)相反表述",
+            "以上都不正确"
+        ]
     }
 
     private func normalize(_ value: String) -> String {
@@ -109,6 +178,13 @@ struct QuestionVariantFactory {
 enum PracticeBuildMode {
     case same
     case newBlanks(seed: Int)
+
+    var seed: Int {
+        switch self {
+        case .same: 0
+        case .newBlanks(let seed): seed
+        }
+    }
 }
 
 private extension Array where Element: Hashable {

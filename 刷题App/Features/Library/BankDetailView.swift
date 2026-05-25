@@ -28,13 +28,10 @@ struct BankDetailView: View {
             Section {
                 ForEach(bank.questions) { question in
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(question.stem)
+                        Text(question.sourceText)
                             .font(.body)
                         HStack {
-                            Text(question.questionKind.title)
-                            if !question.options.isEmpty {
-                                Text("\(question.options.count) 个选项")
-                            }
+                            Text("练习时生成题型")
                             Text(question.knowledgeTags.joined(separator: " / "))
                         }
                             .font(.caption)
@@ -43,7 +40,7 @@ struct BankDetailView: View {
                     .padding(.vertical, 4)
                 }
             } header: {
-                Text("题目")
+                Text("识别内容")
             }
         }
         .navigationTitle(bank.title)

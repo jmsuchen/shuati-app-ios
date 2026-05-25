@@ -1,17 +1,46 @@
 import Foundation
 
 struct LocalQuestionGenerator {
+    func recognizeItems(from document: ParsedDocument, count: Int) -> [GeneratedQuestionDTO] {
+        let sentences = sourceSentences(from: document)
+        let items = sentences.enumerated().compactMap { index, sentence in
+            makeRecognizedItem(from: sentence, index: index)
+        }
+        return Array(items.prefix(count))
+    }
+
     func generate(from document: ParsedDocument, count: Int) -> [GeneratedQuestionDTO] {
-        let sentences = document.plainText
-            .components(separatedBy: CharacterSet(charactersIn: "。！？.!?\n"))
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { $0.count >= 12 }
+        let sentences = sourceSentences(from: document)
 
         let answers = sentences.compactMap { chooseAnswer(in: $0) }
         let candidates = sentences.enumerated().compactMap { index, sentence in
             makeQuestion(from: sentence, index: index, distractors: answers)
         }
         return Array(candidates.prefix(count))
+    }
+
+    private func sourceSentences(from document: ParsedDocument) -> [String] {
+        document.plainText
+            .components(separatedBy: CharacterSet(charactersIn: "。！？.!?\n"))
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { $0.count >= 12 }
+            .uniqued()
+    }
+
+    private func makeRecognizedItem(from sentence: String, index: Int) -> GeneratedQuestionDTO? {
+        guard let answer = chooseAnswer(in: sentence), answer.count >= 2 else {
+            return nil
+        }
+        return GeneratedQuestionDTO(
+            stem: sentence,
+            answers: [answer],
+            sourceText: sentence,
+            explanation: "答案来自原文中的关键表达：\(answer)。",
+            difficulty: answer.count > 6 ? "medium" : "easy",
+            knowledgeTags: ["识别材料"],
+            questionType: nil,
+            options: nil
+        )
     }
 
     private func makeQuestion(from sentence: String, index: Int, distractors: [String]) -> GeneratedQuestionDTO? {
@@ -124,5 +153,12 @@ private extension String {
             return nil
         }
         return String(self[swiftRange])
+    }
+}
+
+private extension Array where Element: Hashable {
+    func uniqued() -> [Element] {
+        var seen = Set<Element>()
+        return filter { seen.insert($0).inserted }
     }
 }

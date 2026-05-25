@@ -22,7 +22,7 @@ struct LibraryView: View {
                     ContentUnavailableView(
                         "还没有题库",
                         systemImage: "tray.and.arrow.down",
-                        description: Text("导入文档或手动录入材料后即可识别题目。")
+                        description: Text("导入文档或手动录入材料后即可识别内容。")
                     )
                 } else {
                     List {
@@ -66,7 +66,7 @@ struct LibraryView: View {
             }
             .overlay {
                 if isGenerating {
-                    ProgressView("正在识别题目")
+                    ProgressView("正在识别材料")
                         .padding(20)
                         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 8))
                 }
@@ -155,7 +155,7 @@ struct LibraryView: View {
         )
         let generated = try await generator.generateAllRecognizableQuestions(from: document)
         guard !generated.isEmpty else {
-            importError = "未能从材料中识别题目，请换一份内容更完整的题库。"
+            importError = "未能从材料中识别可练习内容，请换一份内容更完整的题库。"
             return
         }
 
@@ -206,7 +206,7 @@ private struct ManualQuestionEntryView: View {
                 } header: {
                     Text("材料内容")
                 } footer: {
-                    Text("可以粘贴知识点、题干、笔记或完整段落，系统会自动识别题型。")
+                    Text("可以粘贴知识点、题干、笔记或完整段落，系统会先保存材料，进入练习后再按所选题型出题。")
                 }
             }
             .navigationTitle("手动录入")
@@ -217,7 +217,7 @@ private struct ManualQuestionEntryView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("识别") {
+                    Button("保存") {
                         save(titleOrFallback, content)
                     }
                     .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).count < 12)
@@ -241,7 +241,7 @@ private struct BankRow: View {
                 .font(.headline)
                 .lineLimit(1)
             HStack {
-                Label("\(bank.questions.count) 题", systemImage: "questionmark.circle")
+                Label("\(bank.questions.count) 条材料", systemImage: "text.page")
                 Text(bank.createdAt, style: .date)
             }
             .font(.caption)
