@@ -353,6 +353,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 200000000000000000000026 /* AppConfig.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
@@ -384,6 +385,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 200000000000000000000026 /* AppConfig.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
