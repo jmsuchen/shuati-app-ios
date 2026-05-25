@@ -3,9 +3,13 @@ import SwiftUI
 
 struct MistakesView: View {
     @Environment(AppState.self) private var appState
+    @Environment(\.modelContext) private var modelContext
     @Query(filter: #Predicate<AnswerRecord> { !$0.isCorrect }, sort: \AnswerRecord.answeredAt, order: .reverse)
     private var mistakes: [AnswerRecord]
     @State private var isPracticing = false
+    @State private var isSelecting = false
+    @State private var selectedQuestionIDs = Set<UUID>()
+    @State private var isConfirmingBatchDelete = false
 
     var body: some View {
         NavigationStack {
@@ -26,41 +30,111 @@ struct MistakesView: View {
                         )
                     } else {
                         List(uniqueMistakes) { mistake in
-                            NavigationLink {
-                                SingleMistakePracticeView(
-                                    record: mistake,
-                                    relatedMistakes: mistakes,
-                                    autoDeleteThreshold: appState.mistakeAutoDeleteThreshold
-                                )
-                            } label: {
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text(mistake.stem)
-                                        .lineLimit(2)
-                                    HStack {
-                                        Text(mistake.correctAnswers.joined(separator: " / "))
-                                        Text("连对 \(MistakeProgressStore.streak(for: mistake.questionID))")
+                            if isSelecting {
+                                Button {
+                                    toggleSelection(for: mistake.questionID)
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: selectedQuestionIDs.contains(mistake.questionID) ? "checkmark.circle.fill" : "circle")
+                                            .font(.title3)
+                                            .foregroundStyle(selectedQuestionIDs.contains(mistake.questionID) ? Color.accentColor : Color.secondary)
+                                        mistakeRow(for: mistake)
                                     }
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
                                 }
-                                .padding(.vertical, 4)
+                                .buttonStyle(.plain)
+                            } else {
+                                NavigationLink {
+                                    SingleMistakePracticeView(
+                                        record: mistake,
+                                        relatedMistakes: mistakes,
+                                        autoDeleteThreshold: appState.mistakeAutoDeleteThreshold
+                                    )
+                                } label: {
+                                    mistakeRow(for: mistake)
+                                }
                             }
                         }
                     }
                 }
                 .navigationTitle("错题")
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            isPracticing = true
-                        } label: {
-                            Label("练习错题", systemImage: "arrow.clockwise.circle")
+                    ToolbarItem(placement: .topBarLeading) {
+                        if isSelecting {
+                            Button("取消") {
+                                isSelecting = false
+                                selectedQuestionIDs.removeAll()
+                            }
                         }
-                        .disabled(mistakes.isEmpty)
                     }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        if isSelecting {
+                            Button(role: .destructive) {
+                                isConfirmingBatchDelete = true
+                            } label: {
+                                Label("删除", systemImage: "trash")
+                            }
+                            .disabled(selectedQuestionIDs.isEmpty)
+                        } else {
+                            Menu {
+                                Button {
+                                    isPracticing = true
+                                } label: {
+                                    Label("练习错题", systemImage: "arrow.clockwise.circle")
+                                }
+                                Button {
+                                    isSelecting = true
+                                } label: {
+                                    Label("多选删除", systemImage: "checklist")
+                                }
+                            } label: {
+                                Label("更多", systemImage: "ellipsis.circle")
+                            }
+                            .disabled(mistakes.isEmpty)
+                        }
+                    }
+                }
+                .safeAreaInset(edge: .bottom) {
+                    if isSelecting {
+                        Button(role: .destructive) {
+                            isConfirmingBatchDelete = true
+                        } label: {
+                            Label("删除已选 \(selectedQuestionIDs.count) 题", systemImage: "trash")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(selectedQuestionIDs.isEmpty)
+                        .padding()
+                        .background(.bar)
+                    }
+                }
+                .confirmationDialog(
+                    "删除已选错题？",
+                    isPresented: $isConfirmingBatchDelete,
+                    titleVisibility: .visible
+                ) {
+                    Button("删除 \(selectedQuestionIDs.count) 题", role: .destructive) {
+                        deleteSelectedMistakes()
+                    }
+                    Button("取消", role: .cancel) {}
+                } message: {
+                    Text("会从错题本移除这些题目的全部错误记录。")
                 }
             }
         }
+    }
+
+    private func mistakeRow(for mistake: AnswerRecord) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(mistake.stem)
+                .lineLimit(2)
+            HStack {
+                Text(mistake.correctAnswers.joined(separator: " / "))
+                Text("连对 \(MistakeProgressStore.streak(for: mistake.questionID))")
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 4)
     }
 
     private var uniqueMistakes: [AnswerRecord] {
@@ -68,6 +142,26 @@ struct MistakesView: View {
         return mistakes.filter { mistake in
             seen.insert(mistake.questionID).inserted
         }
+    }
+
+    private func toggleSelection(for questionID: UUID) {
+        if selectedQuestionIDs.contains(questionID) {
+            selectedQuestionIDs.remove(questionID)
+        } else {
+            selectedQuestionIDs.insert(questionID)
+        }
+    }
+
+    private func deleteSelectedMistakes() {
+        for mistake in mistakes where selectedQuestionIDs.contains(mistake.questionID) {
+            modelContext.delete(mistake)
+        }
+        for questionID in selectedQuestionIDs {
+            MistakeProgressStore.reset(questionID: questionID)
+        }
+        try? modelContext.save()
+        selectedQuestionIDs.removeAll()
+        isSelecting = false
     }
 }
 
