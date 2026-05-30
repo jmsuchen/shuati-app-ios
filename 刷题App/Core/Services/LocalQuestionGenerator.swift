@@ -20,7 +20,14 @@ struct LocalQuestionGenerator {
     }
 
     private func sourceSentences(from document: ParsedDocument) -> [String] {
-        document.plainText
+        if document.sections.count > 1 {
+            return document.sections
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                .filter { $0.count >= 12 }
+                .uniqued()
+        }
+
+        return document.plainText
             .components(separatedBy: CharacterSet(charactersIn: "。！？.!?\n"))
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { $0.count >= 12 }

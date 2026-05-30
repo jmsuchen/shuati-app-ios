@@ -20,9 +20,14 @@ struct QuestionVariantFactory {
         kindFilter: PracticeQuestionKindFilter,
         mode: PracticeBuildMode
     ) -> [SessionQuestion] {
-        let source = Array(bank.questions.prefix(count))
+        let isOriginalQuestionBank = bank.questions.contains { isOriginalQuestion($0) }
+        let filtered = isOriginalQuestionBank ? bank.questions.filter { kindFilter.includes($0.questionKind) } : bank.questions
+        let source = Array(filtered.shuffled().prefix(count))
         let distractors = bank.questions.flatMap(\.answers)
         return source.enumerated().map { index, question in
+            if isOriginalQuestion(question) {
+                return makeOriginalQuestion(question)
+            }
             let seed = mode.seed + index
             let kind = practiceKind(for: kindFilter, index: seed)
             return makeQuestion(question, kind: kind, index: seed, distractors: distractors)
@@ -40,6 +45,20 @@ struct QuestionVariantFactory {
         case .trueFalse:
             return .trueFalse
         }
+    }
+
+    private func makeOriginalQuestion(_ question: PracticeQuestion) -> SessionQuestion {
+        SessionQuestion(
+            sourceQuestion: question,
+            stem: question.stem,
+            answers: question.answers,
+            options: question.questionKind == .singleChoice ? question.options.shuffled() : question.options,
+            kind: question.questionKind,
+            sourceText: question.sourceText,
+            explanation: question.explanation,
+            difficulty: question.difficulty,
+            knowledgeTags: question.knowledgeTags
+        )
     }
 
     private func makeQuestion(
@@ -172,6 +191,10 @@ struct QuestionVariantFactory {
 
     private func normalize(_ value: String) -> String {
         value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+
+    private func isOriginalQuestion(_ question: PracticeQuestion) -> Bool {
+        question.knowledgeTags.contains("原题导入")
     }
 }
 

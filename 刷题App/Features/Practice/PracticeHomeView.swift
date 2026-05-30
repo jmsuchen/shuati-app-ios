@@ -360,7 +360,8 @@ struct PracticeSessionView: View {
     }
 
     private var effectiveQuestionCount: Int {
-        let availableCount = bank.questions.count
+        let availableQuestions = availablePracticeQuestions(in: bank, filter: requestedKindFilter)
+        let availableCount = availableQuestions.count
         return requestedQuestionCount == Int.max ? availableCount : min(requestedQuestionCount, availableCount)
     }
 
@@ -392,7 +393,7 @@ struct PracticeSessionView: View {
     private func restore(_ draft: PracticeDraft) {
         sessionQuestions = variantFactory.makeSessionQuestions(
             from: bank,
-            count: draft.questionCount == Int.max ? bank.questions.count : min(draft.questionCount, bank.questions.count),
+            count: draft.questionCount == Int.max ? availablePracticeQuestions(in: bank, filter: draft.kindFilter).count : min(draft.questionCount, availablePracticeQuestions(in: bank, filter: draft.kindFilter).count),
             kindFilter: draft.kindFilter,
             mode: .same
         )
@@ -427,6 +428,13 @@ struct PracticeSessionView: View {
     private func regenerate() {
         variantRound += 1
         buildQuestions(mode: .newBlanks(seed: variantRound))
+    }
+
+    private func availablePracticeQuestions(in bank: QuestionBank, filter: PracticeQuestionKindFilter) -> [PracticeQuestion] {
+        if bank.questions.contains(where: { $0.knowledgeTags.contains("原题导入") }) {
+            return bank.questions.filter { filter.includes($0.questionKind) }
+        }
+        return bank.questions
     }
 }
 

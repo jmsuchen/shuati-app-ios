@@ -29,6 +29,14 @@ struct BankDetailView: View {
             }
 
             Section {
+                Text(markdownPreview)
+                    .font(.body)
+                    .textSelection(.enabled)
+            } header: {
+                Label("Markdown 显示", systemImage: "text.page")
+            }
+
+            Section {
                 ForEach(bank.questions) { question in
                     HStack(alignment: .top, spacing: 12) {
                         DetailIcon(systemImage: "text.badge.checkmark", color: .green)
@@ -82,6 +90,12 @@ struct BankDetailView: View {
         } message: {
             Text("题库、题目和未完成练习进度都会被删除。")
         }
+    }
+
+    private var markdownPreview: AttributedString {
+        let markdown = bank.sourceMarkdown.trimmingCharacters(in: .whitespacesAndNewlines)
+        let source = markdown.isEmpty ? bank.sourcePreview : markdown
+        return (try? AttributedString(markdown: source)) ?? AttributedString(source)
     }
 }
 

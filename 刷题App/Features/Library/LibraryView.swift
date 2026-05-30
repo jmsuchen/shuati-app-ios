@@ -10,10 +10,13 @@ struct LibraryView: View {
     @State private var isImporting = false
     @State private var isGenerating = false
     @State private var isShowingManualEntry = false
+    @State private var pendingImportURL: URL?
+    @State private var isChoosingImportMode = false
     @State private var importError: String?
 
     private let importService = DocumentImportService()
     private let markdownParser = MarkdownParser()
+    private let originalQuestionParser = OriginalQuestionParser()
 
     var body: some View {
         NavigationStack {
@@ -78,6 +81,29 @@ struct LibraryView: View {
             ) { result in
                 handleImportResult(result)
             }
+            .confirmationDialog("选择导入方式", isPresented: $isChoosingImportMode, titleVisibility: .visible) {
+                Button("不使用 AI，按原题导入") {
+                    if let pendingImportURL {
+                        Task {
+                            await importAndGenerate(from: pendingImportURL, mode: .originalQuestions)
+                        }
+                    }
+                    pendingImportURL = nil
+                }
+                Button("AI 识别材料后练习出题") {
+                    if let pendingImportURL {
+                        Task {
+                            await importAndGenerate(from: pendingImportURL, mode: .recognizedMaterial)
+                        }
+                    }
+                    pendingImportURL = nil
+                }
+                Button("取消", role: .cancel) {
+                    pendingImportURL = nil
+                }
+            } message: {
+                Text("原题导入会按题号解析，括号里的内容作为答案；练习时只打乱顺序。")
+            }
             .sheet(isPresented: $isShowingManualEntry) {
                 ManualQuestionEntryView { title, text in
                     isShowingManualEntry = false
@@ -116,19 +142,23 @@ struct LibraryView: View {
             return
         }
 
-        Task {
-            await importAndGenerate(from: url)
-        }
+        pendingImportURL = url
+        isChoosingImportMode = true
     }
 
     @MainActor
-    private func importAndGenerate(from url: URL) async {
+    private func importAndGenerate(from url: URL, mode: ImportMode) async {
         isGenerating = true
         defer { isGenerating = false }
 
         do {
             let document = try importService.importDocument(from: url)
-            try await saveRecognizedBank(document: document, sourceFileName: url.lastPathComponent)
+            switch mode {
+            case .recognizedMaterial:
+                try await saveRecognizedBank(document: document, sourceFileName: url.lastPathComponent)
+            case .originalQuestions:
+                try saveOriginalQuestionBank(document: document, sourceFileName: url.lastPathComponent)
+            }
         } catch {
             importError = error.localizedDescription
         }
@@ -163,7 +193,27 @@ struct LibraryView: View {
             title: document.title,
             sourceFileName: sourceFileName,
             sourcePreview: document.preview,
+            sourceMarkdown: document.markdownText,
             questions: generated.map { $0.makeModel() }
+        )
+        modelContext.insert(bank)
+        try modelContext.save()
+    }
+
+    @MainActor
+    private func saveOriginalQuestionBank(document: ParsedDocument, sourceFileName: String) throws {
+        let questions = originalQuestionParser.parse(document: document)
+        guard !questions.isEmpty else {
+            importError = "未能按题号解析原题。请确认题目前有 1.、1、 或 一、 这样的题号，且答案写在括号里。"
+            return
+        }
+
+        let bank = QuestionBank(
+            title: document.title,
+            sourceFileName: sourceFileName,
+            sourcePreview: document.preview,
+            sourceMarkdown: document.markdownText,
+            questions: questions
         )
         modelContext.insert(bank)
         try modelContext.save()
@@ -184,6 +234,11 @@ struct LibraryView: View {
         modelContext.delete(bank)
         try? modelContext.save()
     }
+}
+
+private enum ImportMode {
+    case recognizedMaterial
+    case originalQuestions
 }
 
 private struct ManualQuestionEntryView: View {

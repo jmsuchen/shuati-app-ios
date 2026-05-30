@@ -62,6 +62,7 @@ final class QuestionBank {
     var title: String
     var sourceFileName: String
     var sourcePreview: String
+    var sourceMarkdown: String
     var createdAt: Date
     var lastPracticedAt: Date?
 
@@ -73,6 +74,7 @@ final class QuestionBank {
         title: String,
         sourceFileName: String,
         sourcePreview: String,
+        sourceMarkdown: String = "",
         createdAt: Date = .now,
         questions: [PracticeQuestion] = []
     ) {
@@ -80,6 +82,7 @@ final class QuestionBank {
         self.title = title
         self.sourceFileName = sourceFileName
         self.sourcePreview = sourcePreview
+        self.sourceMarkdown = sourceMarkdown
         self.createdAt = createdAt
         self.questions = questions
     }
