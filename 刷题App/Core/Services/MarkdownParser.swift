@@ -31,7 +31,7 @@ struct MarkdownParser {
             markdownText: normalized.trimmingCharacters(in: .whitespacesAndNewlines),
             plainText: plain,
             preview: String(plain.prefix(800)),
-            sections: splitSections(from: plain)
+            sections: splitSections(from: normalized)
         )
     }
 
@@ -75,10 +75,23 @@ struct MarkdownParser {
         let lines = text
             .components(separatedBy: .newlines)
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        let hasQuestionTypeHeading = lines.contains { line in
+            isMarkdownHeading(line) && isSupportedQuestionHeading(line)
+        }
 
         var blocks: [String] = []
         var current: [String] = []
+        var isInSupportedQuestionSection = !hasQuestionTypeHeading
         for line in lines where !line.isEmpty {
+            if isMarkdownHeading(line) {
+                if !current.isEmpty {
+                    blocks.append(current.joined(separator: "\n"))
+                    current = []
+                }
+                isInSupportedQuestionSection = !hasQuestionTypeHeading || isSupportedQuestionHeading(line)
+                continue
+            }
+            guard isInSupportedQuestionSection else { continue }
             if isQuestionNumberLine(line), !current.isEmpty {
                 blocks.append(current.joined(separator: "\n"))
                 current = [line]
@@ -97,6 +110,14 @@ struct MarkdownParser {
             of: #"^\s*(?:\d{1,4}[\.、．\)]|[一二三四五六七八九十]{1,4}[、\.．])\s*.+"#,
             options: .regularExpression
         ) != nil
+    }
+
+    private func isMarkdownHeading(_ line: String) -> Bool {
+        line.trimmingCharacters(in: .whitespaces).hasPrefix("#")
+    }
+
+    private func isSupportedQuestionHeading(_ line: String) -> Bool {
+        line.contains("填空题") || line.contains("判断题") || line.contains("选择题")
     }
 }
 
@@ -222,7 +243,12 @@ struct OriginalQuestionParser {
     }
 
     private func normalizeAnswerToken(_ value: String) -> String {
-        value.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        value
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "*", with: "")
+            .replacingOccurrences(of: "`", with: "")
+            .replacingOccurrences(of: "$", with: "")
+            .lowercased()
     }
 }
 

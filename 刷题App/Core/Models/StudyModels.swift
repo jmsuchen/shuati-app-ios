@@ -62,7 +62,7 @@ final class QuestionBank {
     var title: String
     var sourceFileName: String
     var sourcePreview: String
-    var sourceMarkdown: String
+    var sourceMarkdown: String = ""
     var createdAt: Date
     var lastPracticedAt: Date?
 
