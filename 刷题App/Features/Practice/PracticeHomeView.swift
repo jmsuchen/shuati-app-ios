@@ -323,7 +323,7 @@ struct PracticeSessionView: View {
         records.append(record)
 
         if evaluation.isCorrect {
-            goNext()
+            feedback = record
         } else {
             saveDraft()
             feedback = record
@@ -460,6 +460,11 @@ private struct FeedbackView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    Label(record.isCorrect ? "正确" : "错误", systemImage: record.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(record.isCorrect ? .green : .red)
+                }
                 Section("正确答案") {
                     Text(record.correctAnswers.joined(separator: " / "))
                         .font(.headline)
@@ -475,7 +480,7 @@ private struct FeedbackView: View {
                     Text(record.explanation)
                 }
             }
-            .navigationTitle("答错了")
+            .navigationTitle(record.isCorrect ? "答对了" : "答错了")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("继续", action: continueAction)

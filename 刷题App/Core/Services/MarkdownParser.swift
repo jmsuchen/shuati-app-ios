@@ -151,7 +151,7 @@ struct OriginalQuestionParser {
             let answer = choiceAnswer(from: normalizedAnswerTokens, options: options)
             guard let answer else { return nil }
             return PracticeQuestion(
-                stem: removeAnswerMarkers(from: cleanedBlock),
+                stem: removeAnswerMarkers(from: questionStemOnly(from: cleanedBlock)),
                 answers: [answer],
                 sourceText: cleanedBlock,
                 explanation: "正确选项来自原题括号中的答案。",
@@ -177,16 +177,7 @@ struct OriginalQuestionParser {
     private func parseOptions(from block: String) -> [OriginalQuestionOption] {
         block
             .components(separatedBy: .newlines)
-            .compactMap { line in
-                let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
-                guard let match = trimmed.firstMatch(
-                    pattern: #"^([A-Ha-h])[\.\、．\)]\s*(.+)$"#,
-                    groupCount: 2
-                ) else {
-                    return nil
-                }
-                return OriginalQuestionOption(letter: match[0].uppercased(), text: match[1])
-            }
+            .compactMap(parseOptionLine)
     }
 
     private func parseAnswerTokens(from block: String) -> [String] {
@@ -240,6 +231,27 @@ struct OriginalQuestionParser {
         text
             .replacingOccurrences(of: #"（[^（）]{1,40}）"#, with: "____", options: .regularExpression)
             .replacingOccurrences(of: #"\([^()]{1,40}\)"#, with: "____", options: .regularExpression)
+    }
+
+    private func questionStemOnly(from block: String) -> String {
+        block
+            .components(separatedBy: .newlines)
+            .filter { line in
+                parseOptionLine(line) == nil
+            }
+            .joined(separator: "\n")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func parseOptionLine(_ line: String) -> OriginalQuestionOption? {
+        let trimmed = line.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let match = trimmed.firstMatch(
+            pattern: #"^([A-Ha-h])[\.\、．\)]\s*(.+)$"#,
+            groupCount: 2
+        ) else {
+            return nil
+        }
+        return OriginalQuestionOption(letter: match[0].uppercased(), text: match[1])
     }
 
     private func normalizeAnswerToken(_ value: String) -> String {
