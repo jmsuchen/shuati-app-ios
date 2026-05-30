@@ -196,7 +196,7 @@ struct PracticeSessionView: View {
                 )
             }
 
-            Text(question.stem)
+            MarkdownText(question.stem)
                 .font(.title3.weight(.semibold))
                 .lineSpacing(6)
 
@@ -256,7 +256,7 @@ struct PracticeSessionView: View {
             HStack {
                 Image(systemName: answers.first == option ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(answers.first == option ? Color.accentColor : Color.secondary)
-                Text(option)
+                MarkdownText(option)
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.leading)
                 Spacer()
@@ -453,6 +453,128 @@ private struct QuestionBadge: View {
     }
 }
 
+private struct MarkdownText: View {
+    let value: String
+
+    init(_ value: String) {
+        self.value = value
+    }
+
+    var body: some View {
+        Text(attributedValue)
+    }
+
+    private var attributedValue: AttributedString {
+        let displayValue = value.markdownWithReadableMath
+        return (try? AttributedString(markdown: displayValue)) ?? AttributedString(displayValue)
+    }
+}
+
+private extension String {
+    var markdownWithReadableMath: String {
+        replacingInlineMath { math in
+            math.readableFormula
+        }
+    }
+
+    private func replacingInlineMath(_ transform: (String) -> String) -> String {
+        guard let regex = try? NSRegularExpression(pattern: #"\$([^$\n]+)\$"#) else {
+            return self
+        }
+
+        var result = self
+        let matches = regex.matches(in: self, range: NSRange(startIndex..., in: self))
+        for match in matches.reversed() {
+            guard let fullRange = Range(match.range(at: 0), in: result),
+                  let mathRange = Range(match.range(at: 1), in: result) else {
+                continue
+            }
+            result.replaceSubrange(fullRange, with: transform(String(result[mathRange])))
+        }
+        return result
+    }
+
+    private var readableFormula: String {
+        var result = self
+            .replacingOccurrences(of: #"\\mathrm\{([^}]+)\}"#, with: "$1", options: .regularExpression)
+            .replacingOccurrences(of: #"\\text\{([^}]+)\}"#, with: "$1", options: .regularExpression)
+            .replacingOccurrences(of: "\\cdot", with: "·")
+            .replacingOccurrences(of: "\\times", with: "×")
+            .replacingOccurrences(of: "\\omega", with: "ω")
+            .replacingOccurrences(of: "\\Omega", with: "Ω")
+            .replacingOccurrences(of: "\\alpha", with: "α")
+            .replacingOccurrences(of: "\\beta", with: "β")
+            .replacingOccurrences(of: "\\gamma", with: "γ")
+            .replacingOccurrences(of: "\\Delta", with: "Δ")
+            .replacingOccurrences(of: "\\leq", with: "≤")
+            .replacingOccurrences(of: "\\geq", with: "≥")
+            .replacingOccurrences(of: "\\neq", with: "≠")
+            .replacingOccurrences(of: "\\", with: "")
+
+        result = result.replacingScript(pattern: #"_\{([^}]+)\}"#, script: .lower)
+        result = result.replacingScript(pattern: #"_(\w)"#, script: .lower)
+        result = result.replacingScript(pattern: #"\^\{([^}]+)\}"#, script: .upper)
+        result = result.replacingScript(pattern: #"\^(\w)"#, script: .upper)
+        return result
+    }
+
+    private func replacingScript(pattern: String, script: FormulaScript) -> String {
+        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+            return self
+        }
+
+        var result = self
+        let matches = regex.matches(in: self, range: NSRange(startIndex..., in: self))
+        for match in matches.reversed() {
+            guard let fullRange = Range(match.range(at: 0), in: result),
+                  let valueRange = Range(match.range(at: 1), in: result) else {
+                continue
+            }
+            result.replaceSubrange(fullRange, with: String(result[valueRange]).scripted(as: script))
+        }
+        return result
+    }
+
+    private func scripted(as script: FormulaScript) -> String {
+        map { character in
+            script.characterMap[character] ?? character
+        }
+        .map(String.init)
+        .joined()
+    }
+}
+
+private enum FormulaScript {
+    case lower
+    case upper
+
+    var characterMap: [Character: Character] {
+        switch self {
+        case .lower:
+            return [
+                "0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄",
+                "5": "₅", "6": "₆", "7": "₇", "8": "₈", "9": "₉",
+                "+": "₊", "-": "₋", "=": "₌", "(": "₍", ")": "₎",
+                "a": "ₐ", "e": "ₑ", "h": "ₕ", "i": "ᵢ", "j": "ⱼ",
+                "k": "ₖ", "l": "ₗ", "m": "ₘ", "n": "ₙ", "o": "ₒ",
+                "p": "ₚ", "r": "ᵣ", "s": "ₛ", "t": "ₜ", "u": "ᵤ",
+                "v": "ᵥ", "x": "ₓ"
+            ]
+        case .upper:
+            return [
+                "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴",
+                "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹",
+                "+": "⁺", "-": "⁻", "=": "⁼", "(": "⁽", ")": "⁾",
+                "a": "ᵃ", "b": "ᵇ", "c": "ᶜ", "d": "ᵈ", "e": "ᵉ",
+                "f": "ᶠ", "g": "ᵍ", "h": "ʰ", "i": "ⁱ", "j": "ʲ",
+                "k": "ᵏ", "l": "ˡ", "m": "ᵐ", "n": "ⁿ", "o": "ᵒ",
+                "p": "ᵖ", "r": "ʳ", "s": "ˢ", "t": "ᵗ", "u": "ᵘ",
+                "v": "ᵛ", "w": "ʷ", "x": "ˣ", "y": "ʸ", "z": "ᶻ"
+            ]
+        }
+    }
+}
+
 private struct FeedbackView: View {
     let record: AnswerRecord
     let continueAction: () -> Void
@@ -466,18 +588,18 @@ private struct FeedbackView: View {
                         .foregroundStyle(record.isCorrect ? .green : .red)
                 }
                 Section("正确答案") {
-                    Text(record.correctAnswers.joined(separator: " / "))
+                    MarkdownText(record.correctAnswers.joined(separator: " / "))
                         .font(.headline)
                 }
                 Section("你的答案") {
-                    Text(record.userAnswers.joined(separator: " / "))
+                    MarkdownText(record.userAnswers.joined(separator: " / "))
                         .foregroundStyle(.secondary)
                 }
                 Section("原文") {
-                    Text(record.sourceText)
+                    MarkdownText(record.sourceText)
                 }
                 Section("解析") {
-                    Text(record.explanation)
+                    MarkdownText(record.explanation)
                 }
             }
             .navigationTitle(record.isCorrect ? "答对了" : "答错了")
@@ -524,8 +646,8 @@ private struct PracticeResultView: View {
                 Section("错题") {
                     ForEach(wrongRecords) { record in
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(record.stem)
-                            Text(record.correctAnswers.joined(separator: " / "))
+                            MarkdownText(record.stem)
+                            MarkdownText(record.correctAnswers.joined(separator: " / "))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
